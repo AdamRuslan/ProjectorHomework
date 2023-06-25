@@ -2,36 +2,55 @@ Python
 
 Table: Users
 
-Primary Key: user_id
-Attributes: username, password, email, first_name, last_name, phone_number, registration_date, user_type
-Table: Hosts
+1. Establish a connection to the database.
+2. Create the "Users" table with the following fields:
+   - user_id (primary key)
+   - username
+   - password
+   - email
+   - first_name
+   - last_name
+   - phone_number
+   - registration_date
+   - user_type
+3. Create the "Hosts" table with the following fields:
+   - host_id (primary key, foreign key referencing Users.user_id)
+   - bio
+   - profile_picture
+   - location
+4. Create the "Guests" table with the following fields:
+   - guest_id (primary key, foreign key referencing Users.user_id)
+   - profile_picture
+   - location
+5. Create the "Rooms" table with the following fields:
+   - room_id (primary key)
+   - host_id (foreign key referencing Hosts.host_id)
+   - room_type
+   - description
+   - capacity
+   - price_per_night
+   - is_ac (boolean field)
+   - has_refrigerator (boolean field)
+6. Create the "Reservations" table with the following fields:
+   - reservation_id (primary key)
+   - guest_id (foreign key referencing Guests.guest_id)
+   - room_id (foreign key referencing Rooms.room_id)
+   - check_in_date
+   - check_out_date
+   - payment_status
+7. Create the "Reviews" table with the following fields:
+   - review_id (primary key)
+   - guest_id (foreign key referencing Guests.guest_id)
+   - host_id (foreign key referencing Hosts.host_id)
+   - reservation_id (foreign key referencing Reservations.reservation_id)
+   - rating
+   - comment
+8. Create the "Payments" table (optional for guests) with the following fields:
+   - payment_id (primary key)
+   - reservation_id (foreign key referencing Reservations.reservation_id)
+   - payment_date
+   - amount
+   - payment_method
+9. Close the connection to the database.
 
-Primary Key: host_id (foreign key referencing Users.user_id)
-Attributes: bio, profile_picture, location
-Table: Guests
-
-Primary Key: guest_id (foreign key referencing Users.user_id)
-Attributes: profile_picture, location
-Table: Rooms
-
-Primary Key: room_id
-Foreign Key: host_id (referencing Hosts.host_id)
-Attributes: room_type, description, capacity, price_per_night, has_ac, has_refrigerator
-Table: Reservations
-
-Primary Key: reservation_id
-Foreign Key: guest_id (referencing Guests.guest_id)
-Foreign Key: room_id (referencing Rooms.room_id)
-Attributes: check_in_date, check_out_date, payment_status
-Table: Reviews
-
-Primary Key: review_id
-Foreign Key: guest_id (referencing Guests.guest_id)
-Foreign Key: host_id (referencing Hosts.host_id)
-Foreign Key: reservation_id (referencing Reservations.reservation_id)
-Attributes: rating, comment
-Table: Payments (optional for guest)
-
-Primary Key: payment_id
-Foreign Key: reservation_id (referencing Reservations.reservation_id)
-Attributes: payment_date, amount, payment_method
+#This revised algorithm reflects the changes based on your comments, including the naming conventions and relationships between the tables.
