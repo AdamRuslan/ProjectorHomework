@@ -13,7 +13,7 @@ JOIN Hosts ON Users.user_id = Hosts.host_id
 JOIN Rooms ON Hosts.host_id = Rooms.host_id
 JOIN Reservations ON Rooms.room_id = Reservations.room_id
 JOIN Payments ON Reservations.reservation_id = Payments.reservation_id
-WHERE strftime('%Y-%m', Payments.payment_date) = strftime('%Y-%m', 'now', '-1 month')
+WHERE DATE_TRUNC('month', Payments.payment_date) = DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
 GROUP BY Users.user_id, Users.username
 ORDER BY earnings DESC
 LIMIT 1;
