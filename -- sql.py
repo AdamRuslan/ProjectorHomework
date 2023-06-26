@@ -9,8 +9,7 @@ LIMIT 1;
 -- 2. Find the host who earned the most money for the last month
 SELECT Users.user_id, Users.username AS hostname, SUM(Payments.amount) AS earnings
 FROM Users
-JOIN Hosts ON Users.user_id = Hosts.host_id
-JOIN Rooms ON Hosts.host_id = Rooms.host_id
+JOIN Rooms ON Users.user_id = Rooms.host_id
 JOIN Reservations ON Rooms.room_id = Reservations.room_id
 JOIN Payments ON Reservations.reservation_id = Payments.reservation_id
 WHERE DATE_TRUNC('month', Payments.payment_date) = DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
