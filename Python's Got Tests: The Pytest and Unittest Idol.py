@@ -1,39 +1,55 @@
-class Bank:
-    def __init__(self):
-        self.accounts = []
+# Test Bank Class
+def test_bank_open_account():
+    bank = Bank()
 
-    def open_account(self, account):
-        self.accounts.append(account)
-        initial_balance = account.get_balance()
-        if initial_balance < 0:
-            account.withdraw(initial_balance)
+    # Test opening an account with a positive initial balance
+    account1 = Account.create_account("A001")
+    bank.open_account(account1)
+    assert len(bank.accounts) == 1
+    assert account1.get_balance() == 0.0
+
+    account1.deposit(1000)
+    assert account1.get_balance() == 1000.0
+
+    # Test opening an account with a zero initial balance
+    account2 = Account.create_account("A002")
+    bank.open_account(account2)
+    assert len(bank.accounts) == 2
+    assert account2.get_balance() == 0.0
+
+    # Test opening an account with a negative initial balance
+    try:
+        account3 = Account.create_account("A003")
+        account3.withdraw(100)  # Attempt to withdraw from zero balance
+        bank.open_account(account3)  # This line should raise a ValueError
+        # If the line above doesn't raise an error, the test should fail
+        assert False, "Opening an account with a negative balance should raise a ValueError"
+    except ValueError:
+        assert True
+
+    # Test opening multiple accounts
+    account4 = Account.create_account("A004")
+    bank.open_account(account4)
+    account5 = Account.create_account("A005")
+    bank.open_account(account5)
+    assert len(bank.accounts) == 4
+
+    # Test opening duplicate accounts with the same account number
+    account6 = Account.create_account("A004")
+    bank.open_account(account6)
+    account7 = Account.create_account("A005")
+    bank.open_account(account7)
+    assert len(bank.accounts) == 6
+
+    # Test opening duplicate accounts with different account numbers
+    account8 = Account.create_account("A006")
+    bank.open_account(account8)
+    account9 = Account.create_account("A007")
+    bank.open_account(account9)
+    assert len(bank.accounts) == 8
+
+    print("Bank open_account method tests passed successfully!")
 
 
-# Create a Bank object
-bank = Bank()
-
-# Create accounts with different balances
-zero_balance_account = Account.create_account("A001")  # Account with zero balance
-positive_balance_account = Account(1000, "A002")  # Account with positive balance of 1000
-negative_balance_account = Account(-500, "A003")  # Account with negative balance of -500
-
-# Open the accounts in the bank
-bank.open_account(zero_balance_account)
-bank.open_account(positive_balance_account)
-bank.open_account(negative_balance_account)
-
-# Verify that the accounts are open and have the correct balances
-assert zero_balance_account.get_balance() == 0.0
-assert positive_balance_account.get_balance() == 1000
-assert negative_balance_account.get_balance() == -500
-
-# Verify that the accounts are in the bank's account list
-assert zero_balance_account in bank.accounts
-assert positive_balance_account in bank.accounts
-assert negative_balance_account in bank.accounts
-
-# Verify that the correct number of accounts are opened in the bank
-assert len(bank.accounts) == 3
-
-print("open_account test passed.")
-
+# Run the test
+test_bank_open_account()
