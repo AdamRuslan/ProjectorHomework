@@ -1,0 +1,131 @@
+class Account:
+    def __init__(self, balance, account_number):
+        self._balance = balance
+        self._account_number = account_number
+
+    @classmethod
+    def create_account(cls, account_number):
+        return cls(0.0, account_number)
+
+    def deposit(self, amount):
+        if amount > 0:
+            self._balance += amount
+        else:
+            raise ValueError('Amount must be positive')
+
+    def withdraw(self, amount):
+        if amount > 0:
+            self._balance -= amount
+        else:
+            raise ValueError('Amount must be positive')
+
+    def get_balance(self):
+        return self._balance
+
+    def get_account_number(self):
+        return self._account_number
+
+    def __str__(self):
+        return f'Account number: {self._account_number}, balance: {self._balance}'
+
+
+class SavingsAccount(Account):
+    def __init__(self, balance, account_number, interest):
+        super().__init__(balance, account_number)
+        self._interest = interest
+
+    def add_interest(self):
+        interest_amount = self._balance * (self._interest / 100)
+        self._balance += interest_amount
+
+
+class CurrentAccount(Account):
+    def __init__(self, balance, account_number, overdraft_limit):
+        super().__init__(balance, account_number)
+        self._overdraft_limit = overdraft_limit
+
+
+class Bank:
+    def __init__(self):
+        self.accounts = []
+
+    def open_account(self, account):
+        self.accounts.append(account)
+
+    def close_account(self, account_number):
+        for account in self.accounts:
+            if account.get_account_number() == account_number:
+                self.accounts.remove(account)
+                return True
+        return False
+
+    def pay_dividend(self, dividend):
+        for account in self.accounts:
+            account.deposit(dividend)
+
+    def update(self):
+        for account in self.accounts:
+            if isinstance(account, SavingsAccount):
+                account.add_interest()
+            elif isinstance(account, CurrentAccount):
+                if account.get_balance() < 0:
+                    print(f"Sending letter to account {account.get_account_number()}: You are in overdraft!")
+
+    def display_accounts(self):
+        for account in self.accounts:
+            print(account)
+
+
+# Create test accounts
+account1 = Account.create_account("A001")
+account2 = SavingsAccount(2000, "SA001", 3)
+account3 = CurrentAccount(-500, "CA001", 1000)
+
+# Create a Bank object and open the accounts
+bank = Bank()
+bank.open_account(account1)
+bank.open_account(account2)
+bank.open_account(account3)
+
+# Display the account balances in the bank
+print("Accounts:")
+bank.display_accounts()
+print()
+
+# Perform some transactions
+account1.deposit(1000)
+account2.deposit(500)
+account3.withdraw(200)
+
+# Display the account balances in the bank
+print("Accounts after transactions:")
+bank.display_accounts()
+print()
+
+# Pay a dividend into each account
+bank.pay_dividend(50)
+
+# Display the account balances in the bank
+print("Accounts after dividend payment:")
+bank.display_accounts()
+print()
+
+# Update the accounts
+bank.update()
+print()
+
+# Display the account balances in the bank after updating
+print("Accounts after updating:")
+bank.display_accounts()
+print()
+
+# Close an account
+account_number_to_close = "A001"
+if bank.close_account(account_number_to_close):
+    print(f"Account {account_number_to_close} has been closed.")
+else:
+    print(f"Account {account_number_to_close} not found.")
+
+# Display the account balances in the bank
+print("Accounts after closing an account:")
+bank.display_accounts()
